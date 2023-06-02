@@ -1,8 +1,8 @@
-package repositories;
+package org.example.repositories;
 
-import entities.DeliveryStatus;
-import entities.TravelHistory;
-import factories.ConnectionFactory;
+import org.example.entities.enums.DeliveryStatus;
+import org.example.entities.TravelHistory;
+import org.example.utils.ConnectionFactory;
 
 import java.sql.*;
 
@@ -10,8 +10,14 @@ public class TravelHistoryRepository {
     private final String GET_BY_ID_TEMPLATE = "select * from travel_histories where travel_history_id = ?";
     private final String INSERT_TEMPLATE = "insert into travel_histories(travel_history_id, order_id, current_address, current_travel_date, current_status) values (?, ?, ?, ?, ?)";
 
-    private TravelHistory get(Long id) {
-        try (Connection connection = ConnectionFactory.getConnection()) {
+    private final Connection connection;
+
+    public TravelHistoryRepository(ConnectionFactory connectionFactory) {
+        this.connection = ConnectionFactory.getConnection();
+    }
+
+    public TravelHistory get(Long id) {
+        try {
             PreparedStatement ps = connection.prepareStatement(GET_BY_ID_TEMPLATE);
             ps.setLong(1, id);
 
@@ -32,7 +38,7 @@ public class TravelHistoryRepository {
     }
 
     public boolean save(TravelHistory travelHistory) {
-        try (Connection connection = ConnectionFactory.getConnection()) {
+        try {
             PreparedStatement ps = connection.prepareStatement(INSERT_TEMPLATE);
             ps.setLong(1, travelHistory.getId());
             ps.setLong(2, travelHistory.getOrderId());

@@ -1,7 +1,8 @@
 package repositories;
 
-import entities.Category;
-import entities.Product;
+import org.example.entities.enums.Category;
+import org.example.entities.Product;
+import org.example.repositories.ProductRepository;
 import org.junit.jupiter.api.Test;
 
 import java.math.BigDecimal;

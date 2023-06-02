@@ -1,16 +1,16 @@
-package entities;
+package org.example.entities;
 
-public class Customer {
+public class Provider {
     private Long id;
-    private String firstName;
-    private String lastName;
+    private String name;
+    private String address;
     private String email;
     private String phone;
 
-    public Customer(Long id, String firstName, String lastName, String email, String phone) {
+    public Provider(Long id, String name, String address, String email, String phone) {
         this.id = id;
-        this.firstName = firstName;
-        this.lastName = lastName;
+        this.name = name;
+        this.address = address;
         this.email = email;
         this.phone = phone;
     }
@@ -23,20 +23,20 @@ public class Customer {
         this.id = id;
     }
 
-    public String getFirstName() {
-        return firstName;
+    public String getName() {
+        return name;
     }
 
-    public void setFirstName(String firstName) {
-        this.firstName = firstName;
+    public void setName(String name) {
+        this.name = name;
     }
 
-    public String getLastName() {
-        return lastName;
+    public String getAddress() {
+        return address;
     }
 
-    public void setLastName(String lastName) {
-        this.lastName = lastName;
+    public void setAddress(String address) {
+        this.address = address;
     }
 
     public String getEmail() {

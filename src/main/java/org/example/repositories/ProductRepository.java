@@ -1,8 +1,8 @@
-package repositories;
+package org.example.repositories;
 
-import entities.Category;
-import entities.Product;
-import factories.ConnectionFactory;
+import org.example.entities.enums.Category;
+import org.example.entities.Product;
+import org.example.utils.ConnectionFactory;
 
 import java.sql.*;
 
@@ -10,9 +10,14 @@ public class ProductRepository {
     private final String GET_BY_ID_TEMPLATE = "select * from products where product_id = ? ";
     private final String INSERT_TEMPLATE = "insert into products(product_id, provider_id, category, product_name, count_in_stock, product_cost) values (?, ?, ?, ?, ?, ?)";
     private final String DELETE_TEMPLATE = "delete from products where id = ?";
+    private final Connection connection;
+
+    public ProductRepository(ConnectionFactory connectionFactory) {
+        this.connection = ConnectionFactory.getConnection();
+    }
 
     public Product get(Long id) {
-        try (Connection connection = ConnectionFactory.getConnection()) {
+        try {
             PreparedStatement ps = connection.prepareStatement(GET_BY_ID_TEMPLATE);
             ps.setLong(1, id);
 
@@ -34,7 +39,7 @@ public class ProductRepository {
     }
 
     public boolean save(Product product) {
-        try (Connection connection = ConnectionFactory.getConnection()) {
+        try {
             PreparedStatement ps = connection.prepareStatement(INSERT_TEMPLATE);
             ps.setLong(1, product.getId());
             ps.setLong(2, product.getProviderId());
@@ -49,7 +54,7 @@ public class ProductRepository {
     }
 
     public boolean extract(Long id) {
-        try (Connection connection = ConnectionFactory.getConnection()){
+        try {
             PreparedStatement ps = connection.prepareStatement(DELETE_TEMPLATE);
             ps.setLong(1, id);
             return ps.executeUpdate() == 1;

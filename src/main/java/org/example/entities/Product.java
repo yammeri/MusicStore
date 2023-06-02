@@ -1,4 +1,6 @@
-package entities;
+package org.example.entities;
+
+import org.example.entities.enums.Category;
 
 import java.math.BigDecimal;
 

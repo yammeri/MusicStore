@@ -1,4 +1,4 @@
-package entities;
+package org.example.entities.enums;
 
 public enum DeliveryType {
     PICKUP("Pickup"), // самовывоз

@@ -1,7 +1,7 @@
-package repositories;
+package org.example.repositories;
 
-import entities.Provider;
-import factories.ConnectionFactory;
+import org.example.entities.Provider;
+import org.example.utils.ConnectionFactory;
 
 import java.sql.*;
 
@@ -9,8 +9,14 @@ public class ProviderRepository {
     private final String GET_BY_ID_TEMPLATE = "select * from providers where provider_id = ?";
     private final String INSERT_TEMPLATE = "insert into providers(provider_id, provider_name, provider_address, email, phone) values (?, ?, ?, ?, ?)";
 
+    private final Connection connection;
+
+    public ProviderRepository(ConnectionFactory connectionFactory) {
+        this.connection = ConnectionFactory.getConnection();
+    }
+
     public Provider get(Long id) {
-        try (Connection connection = ConnectionFactory.getConnection()) {
+        try {
             PreparedStatement ps = connection.prepareStatement(GET_BY_ID_TEMPLATE);
             ps.setLong(1, id);
 
@@ -31,7 +37,7 @@ public class ProviderRepository {
     }
 
     public boolean save(Provider provider) {
-        try (Connection connection = ConnectionFactory.getConnection()) {
+        try {
             PreparedStatement ps = connection.prepareStatement(INSERT_TEMPLATE);
             ps.setLong(1, provider.getId());
             ps.setString(2, provider.getName());

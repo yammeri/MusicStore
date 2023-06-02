@@ -1,7 +1,7 @@
-package repositories;
+package org.example.repositories;
 
-import entities.Customer;
-import factories.ConnectionFactory;
+import org.example.entities.Customer;
+import org.example.utils.ConnectionFactory;
 
 import java.sql.*;
 
@@ -10,8 +10,14 @@ public class CustomerRepository {
 
     private final String INSERT_TEMPLATE = "insert into customers(customer_id, first_name, last_name, email, phone) values (?, ?, ?, ?, ?)";
 
+    private final Connection connection;
+
+    public CustomerRepository(ConnectionFactory connectionFactory) {
+        this.connection = ConnectionFactory.getConnection();
+    }
+
     public Customer get(Long id) {
-        try (Connection connection = ConnectionFactory.getConnection()) {
+        try {
             PreparedStatement ps = connection.prepareStatement(GET_BY_ID_TEMPLATE);
             ps.setLong(1, id);
 
@@ -32,7 +38,7 @@ public class CustomerRepository {
     }
 
     public boolean save(Customer customer) {
-        try (Connection connection = ConnectionFactory.getConnection()) {
+        try {
             PreparedStatement ps = connection.prepareStatement(INSERT_TEMPLATE);
             ps.setLong(1, customer.getId());
             ps.setString(2, customer.getFirstName());
