@@ -1,10 +1,14 @@
 package org.example.entities.enums;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 public enum DeliveryType {
     PICKUP("Pickup"), // самовывоз
     POINT_OF_ISSUE("Delivery to the point of issue"),
     BY_THE_ADDRESS("Delivery to address");
 
+    private static final Logger logger = LogManager.getLogger(DeliveryStatus.class);
     private String value;
 
     private DeliveryType(String value) {
@@ -19,7 +23,9 @@ public enum DeliveryType {
                 }
             }
         }
-        throw new IllegalAccessException("No such value");
+        Exception e = new IllegalAccessException("No such value");
+        logger.error("Ошибка получения типа доставки из строки:\n" + e.getMessage());
+        return null;
     }
 
     public String getValue() {

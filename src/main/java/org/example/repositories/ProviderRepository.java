@@ -1,5 +1,8 @@
 package org.example.repositories;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import org.example.entities.Provider;
 import org.example.utils.ConnectionFactory;
 
@@ -9,6 +12,7 @@ public class ProviderRepository {
     private final String GET_BY_ID_TEMPLATE = "select * from providers where provider_id = ?";
     private final String INSERT_TEMPLATE = "insert into providers(provider_id, provider_name, provider_address, email, phone) values (?, ?, ?, ?, ?)";
 
+    private static final Logger logger = LogManager.getLogger(ProviderRepository.class);
     private final Connection connection;
 
     public ProviderRepository(ConnectionFactory connectionFactory) {
@@ -32,7 +36,8 @@ public class ProviderRepository {
             }
             return null;
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            logger.error("Ошибка получения поставщика по id:\n" + e.getMessage());
+            return null;
         }
     }
 
@@ -46,7 +51,8 @@ public class ProviderRepository {
             ps.setString(5, provider.getPhone());
             return ps.executeUpdate() == 1;
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            logger.error("Ошибка добавления поставщика:\n" + e.getMessage());
+            return false;
         }
     }
 }

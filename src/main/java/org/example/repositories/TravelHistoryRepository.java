@@ -1,15 +1,22 @@
 package org.example.repositories;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import org.example.entities.enums.DeliveryStatus;
 import org.example.entities.TravelHistory;
 import org.example.utils.ConnectionFactory;
 
 import java.sql.*;
+import java.util.ArrayList;
+import java.util.List;
 
 public class TravelHistoryRepository {
     private final String GET_BY_ID_TEMPLATE = "select * from travel_histories where travel_history_id = ?";
+    private final String GET_BY_PRODUCT_ID_TEMPLATE = "select * from travel_histories where order_id = ? order by current_travel_date";
     private final String INSERT_TEMPLATE = "insert into travel_histories(travel_history_id, order_id, current_address, current_travel_date, current_status) values (?, ?, ?, ?, ?)";
 
+    private static final Logger logger = LogManager.getLogger(CustomerRepository.class);
     private final Connection connection;
 
     public TravelHistoryRepository(ConnectionFactory connectionFactory) {
@@ -33,7 +40,34 @@ public class TravelHistoryRepository {
             }
             return null;
         } catch (SQLException | IllegalAccessException e) {
-            throw new RuntimeException(e);
+            logger.error("Ошибка получения истории перемещения по id:\n" + e.getMessage());
+            return null;
+        }
+    }
+
+    public List<TravelHistory> getListOfTravelsByOrderId(Long orderId) {
+        try {
+            PreparedStatement ps = connection.prepareStatement(GET_BY_PRODUCT_ID_TEMPLATE);
+            ps.setLong(1, orderId);
+
+            List<TravelHistory> listOfTravelHistories = new ArrayList<>();
+            ResultSet resultSet = ps.executeQuery();
+
+            while (resultSet.next()) {
+                TravelHistory curTravelHistory = new TravelHistory(
+                        resultSet.getLong("travel_history_id"),
+                        resultSet.getLong("order_id"),
+                        resultSet.getString("current_address"),
+                        resultSet.getDate("current_travel_date"),
+                        DeliveryStatus.fromString(resultSet.getString("current_status")));
+                listOfTravelHistories.add(curTravelHistory);
+            }
+
+            return listOfTravelHistories;
+
+        } catch (SQLException | IllegalAccessException e) {
+            logger.error("Ошибка получения списка историй по id заказа:\n" + e.getMessage());
+            return null;
         }
     }
 
@@ -47,7 +81,8 @@ public class TravelHistoryRepository {
             ps.setString(5, travelHistory.getCurStatus().getValue());
             return ps.executeUpdate() == 1;
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            logger.error("Ошибка добавления истории заказа:\n" + e.getMessage());
+            return false;
         }
     }
 }

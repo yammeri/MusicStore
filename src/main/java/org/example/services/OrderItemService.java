@@ -6,6 +6,7 @@ import org.example.repositories.OrderItemRepository;
 
 public class OrderItemService {
     private final OrderItemRepository orderItemRepository = new OrderItemRepository(new ConnectionFactory());
+
     public OrderItem getOrderItemById(Long id) {
         return orderItemRepository.get(id);
     }

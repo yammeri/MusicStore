@@ -1,5 +1,8 @@
 package org.example.repositories;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import org.example.entities.Customer;
 import org.example.utils.ConnectionFactory;
 
@@ -10,6 +13,7 @@ public class CustomerRepository {
 
     private final String INSERT_TEMPLATE = "insert into customers(customer_id, first_name, last_name, email, phone) values (?, ?, ?, ?, ?)";
 
+    private static final Logger logger = LogManager.getLogger(CustomerRepository.class);
     private final Connection connection;
 
     public CustomerRepository(ConnectionFactory connectionFactory) {
@@ -33,7 +37,8 @@ public class CustomerRepository {
             }
             return null;
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            logger.error("Ошибка получения пользователя по id:\n" + e.getMessage());
+            return null;
         }
     }
 
@@ -47,7 +52,8 @@ public class CustomerRepository {
             ps.setString(5, customer.getPhone());
             return ps.executeUpdate() == 1;
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            logger.error("Ошибка добавления пользователя:\n" + e.getMessage());
+            return false;
         }
     }
 }

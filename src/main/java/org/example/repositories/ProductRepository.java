@@ -1,5 +1,8 @@
 package org.example.repositories;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import org.example.entities.enums.Category;
 import org.example.entities.Product;
 import org.example.utils.ConnectionFactory;
@@ -10,6 +13,8 @@ public class ProductRepository {
     private final String GET_BY_ID_TEMPLATE = "select * from products where product_id = ? ";
     private final String INSERT_TEMPLATE = "insert into products(product_id, provider_id, category, product_name, count_in_stock, product_cost) values (?, ?, ?, ?, ?, ?)";
     private final String DELETE_TEMPLATE = "delete from products where id = ?";
+
+    private static final Logger logger = LogManager.getLogger(ProductRepository.class);
     private final Connection connection;
 
     public ProductRepository(ConnectionFactory connectionFactory) {
@@ -34,7 +39,8 @@ public class ProductRepository {
             }
             return null;
         } catch (SQLException | IllegalAccessException e) {
-            throw new RuntimeException(e);
+            logger.error("Ошибка получения продукта по id:\n" + e.getMessage());
+            return null;
         }
     }
 
@@ -49,7 +55,8 @@ public class ProductRepository {
             ps.setBigDecimal(6, product.getCost());
             return ps.executeUpdate() == 1;
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            logger.error("Ошибка добавления продукта:\n" + e.getMessage());
+            return false;
         }
     }
 
@@ -59,7 +66,8 @@ public class ProductRepository {
             ps.setLong(1, id);
             return ps.executeUpdate() == 1;
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            logger.error("Ошибка удаления продукта по id:\n" + e.getMessage());
+            return false;
         }
     }
 }

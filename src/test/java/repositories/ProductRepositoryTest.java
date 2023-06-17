@@ -3,6 +3,7 @@ package repositories;
 import org.example.entities.enums.Category;
 import org.example.entities.Product;
 import org.example.repositories.ProductRepository;
+import org.example.utils.ConnectionFactory;
 import org.junit.jupiter.api.Test;
 
 import java.math.BigDecimal;
@@ -11,7 +12,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class ProductRepositoryTest {
 
-    ProductRepository productRepository = new ProductRepository();
+    ProductRepository productRepository = new ProductRepository(new ConnectionFactory());
 
     @Test
     void get() {
@@ -55,8 +56,20 @@ class ProductRepositoryTest {
 
         productRepository.extract(Long.MAX_VALUE);
 
-        //проверить, что невозможно вставить объект с параметрами, который не подходят по условиями в базе
-        //???
+        //добавить тестовый объект с параметрами, который не подходят по условиями в базе
+        testProduct = new Product(
+                Long.MAX_VALUE,
+                Long.MAX_VALUE,
+                Category.GUITARS,
+                "",
+                Integer.MAX_VALUE,
+                BigDecimal.ONE);
+
+        // проверить, что добавление невозможно
+        isSaved = productRepository.save(testProduct);
+        assertFalse(isSaved);
+
+        productRepository.extract(Long.MAX_VALUE);
     }
 
     @Test

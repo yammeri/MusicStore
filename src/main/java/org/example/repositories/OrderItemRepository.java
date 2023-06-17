@@ -1,5 +1,8 @@
 package org.example.repositories;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import org.example.entities.OrderItem;
 import org.example.utils.ConnectionFactory;
 
@@ -9,6 +12,7 @@ public class OrderItemRepository {
     private final String GET_BY_ID_TEMPLATE = "select * from order_items where item_id = ?";
     private final String INSERT_TEMPLATE = "insert into order_items(item_id, order_id, product_id, items_count, total_cost) values (?, ?, ?, ?, ?)";
 
+    private static final Logger logger = LogManager.getLogger(OrderItemRepository.class);
     private final Connection connection;
 
     public OrderItemRepository(ConnectionFactory connectionFactory) {
@@ -32,7 +36,8 @@ public class OrderItemRepository {
             }
             return null;
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            logger.error("Ошибка получения пункта заказа по id:" + e.getMessage());
+            return null;
         }
     }
 
@@ -46,7 +51,8 @@ public class OrderItemRepository {
             ps.setBigDecimal(5, orderItem.getTotalCost());
             return ps.executeUpdate() == 1;
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            logger.error("Ошибка добавления пункта заказа:\n" + e.getMessage());
+            return false;
         }
     }
 }

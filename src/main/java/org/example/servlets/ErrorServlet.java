@@ -13,8 +13,7 @@ import java.io.IOException;
 public class ErrorServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        RequestDispatcher requestDispatcher = req.getRequestDispatcher("WEB-INF/error.jsp");
-        // а должно быть так, что у меня нет папки webapp?
+        RequestDispatcher requestDispatcher = req.getRequestDispatcher("WEB-INF/errorPage.jsp");
         requestDispatcher.forward(req, resp);
     }
 }

@@ -1,5 +1,8 @@
 package org.example.repositories;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import org.example.entities.enums.DeliveryType;
 import org.example.entities.Order;
 import org.example.utils.ConnectionFactory;
@@ -12,6 +15,7 @@ public class OrderRepository {
 
     private final String GET_LAST_ID_TEMPLATE = "select max(order_id) as last_id from orders";
 
+    private static final Logger logger = LogManager.getLogger(OrderItemRepository.class);
     private final Connection connection;
 
     public OrderRepository(ConnectionFactory connectionFactory) {
@@ -29,7 +33,8 @@ public class OrderRepository {
             }
             return 0L;
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            logger.error("Ошибка получения последнего созданного id:\n" + e.getMessage());
+            return null;
         }
     }
 
@@ -50,7 +55,8 @@ public class OrderRepository {
             }
             return null;
         } catch (SQLException | IllegalAccessException e) {
-            throw new RuntimeException(e);
+            logger.error("Ошибка получения заказа по id:\n" + e.getMessage());
+            return null;
         }
     }
 
@@ -64,7 +70,8 @@ public class OrderRepository {
             ps.setString(5, order.getDeliveryType().getValue());
             return ps.executeUpdate() == 1;
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            logger.error("Ошибка добавления заказа:\n" + e.getMessage());
+            return false;
         }
     }
 }

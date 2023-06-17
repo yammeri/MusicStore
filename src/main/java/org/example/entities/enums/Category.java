@@ -1,5 +1,8 @@
 package org.example.entities.enums;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 public enum Category {
     UKULELE("Ukulele"),
     GUITARS("Guitars"),
@@ -13,13 +16,14 @@ public enum Category {
     FOLK_ETHNIC("Folk, ethnic"),
     RADIO_SYSTEMS("Radio systems"),
     STUDIO_EQUIPMENT("Studio equipment"),
-    SOUND_EQUIPMENT("Soung equipment"),
+    SOUND_EQUIPMENT("Sound equipment"),
     LIGHTING_EQUIPMENT("Lighting equipment"),
     HEADPHONES_HEADSETS("Headphones, headsets"),
     SWITCHING("Switching"),
     AUDIO_VIDEO_EQUIPMENT("Audio-video equipment"),
     LITERATURE("Literature");
 
+    private static final Logger logger = LogManager.getLogger(Category.class);
     private String value;
 
     private Category(String value) {
@@ -34,7 +38,9 @@ public enum Category {
                 }
             }
         }
-        throw new IllegalAccessException("No such value");
+        Exception e = new IllegalAccessException("No such value");
+        logger.error("Ошибка получения категории из строки:\n" + e.getMessage());
+        return null;
     }
 
     public String getValue() {

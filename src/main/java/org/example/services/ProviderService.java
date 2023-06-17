@@ -6,6 +6,7 @@ import org.example.repositories.ProviderRepository;
 
 public class ProviderService {
     private final ProviderRepository providerRepository = new ProviderRepository(new ConnectionFactory());
+
     public Provider getProviderById(Long id) {
         return providerRepository.get(id);
     }

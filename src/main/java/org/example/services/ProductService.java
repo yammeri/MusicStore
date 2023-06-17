@@ -7,6 +7,7 @@ import org.example.repositories.ProductRepository;
 public class ProductService {
 
     private final ProductRepository productRepository = new ProductRepository(new ConnectionFactory());
+
     public Product getProductById(Long id) {
         return productRepository.get(id);
     }

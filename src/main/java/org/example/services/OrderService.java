@@ -6,9 +6,11 @@ import org.example.repositories.OrderRepository;
 
 public class OrderService {
     private final OrderRepository orderRepository = new OrderRepository(new ConnectionFactory());
+
     public Long getLastId() {
         return orderRepository.getLastId();
     }
+
     public Order getOrderById(Long id) {
         return orderRepository.get(id);
     }
